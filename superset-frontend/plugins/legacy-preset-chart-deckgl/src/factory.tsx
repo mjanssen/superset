@@ -47,7 +47,7 @@ export interface getLayerType<T> {
   ): T;
 }
 interface getPointsType<T> {
-  (point: number[]): T;
+  (point: number[], formData: QueryFormData): T;
 }
 type deckGLComponentState = {
   viewport: Viewport;
@@ -74,7 +74,7 @@ export function createDeckGLComponent(
         viewport = fitViewport(viewport, {
           width,
           height,
-          points: getPoints(props.payload.data.features),
+          points: getPoints(props.payload.data.features, formData),
         }) as Viewport;
       }
 
