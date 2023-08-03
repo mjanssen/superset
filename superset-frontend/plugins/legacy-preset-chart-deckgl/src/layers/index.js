@@ -21,6 +21,7 @@ import { getLayer as deck_grid } from './Grid/Grid';
 import { getLayer as deck_screengrid } from './Screengrid/Screengrid';
 import { getLayer as deck_path } from './Path/Path';
 import { getLayer as deck_hex } from './Hex/Hex';
+import { getLayer as deck_h3_hex } from './H3Hex/H3Hex';
 import { getLayer as deck_scatter } from './Scatter/Scatter';
 import { getLayer as deck_geojson } from './Geojson/Geojson';
 import { getLayer as deck_arc } from './Arc/Arc';
@@ -31,6 +32,7 @@ const layerGenerators = {
   deck_screengrid,
   deck_path,
   deck_hex,
+  deck_h3_hex,
   deck_scatter,
   deck_geojson,
   deck_arc,
