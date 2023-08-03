@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { HexagonLayer } from 'deck.gl';
+import { H3HexagonLayer } from '@deck.gl/geo-layers';
 import React from 'react';
 import { t, CategoricalColorNamespace } from '@superset-ui/core';
 
@@ -30,13 +30,12 @@ function setTooltipContent(o) {
   return (
     <div className="deckgl-tooltip">
       <TooltipRow
-        label={t('Centroid (Longitude and Latitude): ')}
-        value={`(${o.coordinate[0]}, ${o.coordinate[1]})`}
+        label={t('Hex: ')}
+        value={`(${o.object.hex})`}
       />
       <TooltipRow
-        // eslint-disable-next-line prefer-template
-        label={t('Height') + ': '}
-        value={`${o.object.elevationValue}`}
+        label={t('Count: ')}
+        value={`${o.object.count}`}
       />
     </div>
   );
@@ -53,24 +52,31 @@ export function getLayer(formData, payload, onAddFilter, setTooltip) {
     const jsFnMutator = sandboxedEval(fd.js_data_mutator);
     data = jsFnMutator(data);
   }
+
   const aggFunc = getAggFunc(fd.js_agg_function, p => p.weight);
 
-  return new HexagonLayer({
-    id: `hex-layer-${fd.slice_id}`,
+  return new H3HexagonLayer({
+    id: `h3-hexagon-layer-${fd.slice_id}`,
     data,
     pickable: true,
-    radius: fd.grid_size,
+    wireframe: false,
+    filled: true,
     extruded: fd.extruded,
-    colorRange,
-    outline: false,
-    getElevationValue: aggFunc,
-    getColorValue: aggFunc,
+    elevationScale: 20,
+    getHexagon: d => d.hex,
+    getFillColor: d => [255, (1 - d.count / 500) * 255, 0],
+    getElevation: d => d.count,
     ...commonLayerProps(fd, setTooltip, setTooltipContent),
   });
 }
 
-function getPoints(data) {
-  return data.map(d => d.position);
+// Formdata is required since we don't know where hex-es are located
+function getPoints(_, formData) {
+  if (formData.viewport) {
+    return [formData.viewport.longitude, formData.viewport.latitude];
+  }
+  
+  return [];
 }
 
 export default createDeckGLComponent(getLayer, getPoints);

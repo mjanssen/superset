@@ -30,10 +30,10 @@ const metadata = new ChartMetadata({
   name: t('deck.gl H3 Hexagon'),
   thumbnail,
   useLegacyApi: true,
-  tags: [t('deckGL'), t('3D'), t('Geo'), t('Comparison'), t('Experimental')],
+  tags: [t('deckGL'), t('3D'), t('H3'), t('Geo'), t('Comparison'), t('Experimental')],
 });
 
-export default class HexChartPlugin extends ChartPlugin {
+export default class H3HexChartPlugin extends ChartPlugin {
   constructor() {
     super({
       loadChart: () => import('./H3Hex'),
